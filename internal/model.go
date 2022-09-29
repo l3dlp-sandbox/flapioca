@@ -37,8 +37,8 @@ type Model struct {
 func NewModel() Model {
 	return Model{
 		Keys: KeyMap{
-			Up:   key.NewBinding(key.WithKeys("k", "up", " ", "w"), key.WithHelp("↑/k/w/space", "jump")),
-			Quit: key.NewBinding(key.WithKeys("q", "ctrl+c"), key.WithHelp("q/ctrl+c", "quit")),
+			Up:   key.NewBinding(key.WithKeys("k", "up", " ", "w"), key.WithHelp("↑/k/w/espace", "sauter")),
+			Quit: key.NewBinding(key.WithKeys("q", "ctrl+c"), key.WithHelp("q/ctrl+c", "quitter")),
 		},
 		Obstacles: NewObstacles(),
 		Cursor:    Location{},
@@ -84,7 +84,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Layouted = true
 			m.Help.Width = msg.Width
 			m.Viewport.X = 60
-			m.Viewport.Y = 9
+			m.Viewport.Y = 20
 			m.Cursor = Location{2, 0}
 		}
 	case TickMsg:
@@ -122,7 +122,7 @@ func (m Model) Frame() (tea.Model, tea.Cmd) {
 	} else {
 		rightmost = &Location{0, m.Viewport.Y / 2}
 	}
-	gap := m.Viewport.X - rightmost.X
+	gap := m.Viewport.X - rightmost.X 
 	if gap > 5 || (rand.Intn(100) > 90 && gap > 2) {
 		x := m.Viewport.X
 		// Select a y that makes the obstacle possible to avoid.
@@ -146,7 +146,7 @@ func (m Model) Frame() (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	var sb strings.Builder
-	sb.WriteString(TitleStyle.Render("Flapioca"))
+	sb.WriteString(TitleStyle.Render("FlappIssou"))
 	sb.WriteByte('\n')
 
 	viewport := make([]string, 0, m.Viewport.Y)
@@ -175,11 +175,11 @@ func (m Model) View() string {
 	}
 
 	sb.WriteString(ViewportStyle.Render(strings.Join(viewport, "\n")))
-	sb.WriteString(fmt.Sprintf("\n%d point(s) ", m.Score))
+	sb.WriteString(fmt.Sprintf("\nSCORE : %d - ", m.Score))
 	sb.WriteString(m.Help.View(m.Keys))
 
 	if m.Over {
-		sb.WriteString(GameOverStyle.Render("\n\n> Game over! <"))
+		sb.WriteString(GameOverStyle.Render("\n\n> Issou ! <"))
 	}
 
 	// Send the UI for rendering
